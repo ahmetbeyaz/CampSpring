@@ -10,22 +10,22 @@ import kodlama.io.rentACar.businnes.requests.CreateBrandRequest;
 import kodlama.io.rentACar.businnes.requests.UpdateBrandRequest;
 import kodlama.io.rentACar.businnes.responses.GetAllBrandsResponse;
 import kodlama.io.rentACar.businnes.responses.GetByIdBrandsResponse;
+import kodlama.io.rentACar.businnes.rules.BrandBusinnesRules;
 import kodlama.io.rentACar.core.utilities.mappers.ModelMapperService;
 import kodlama.io.rentACar.dataAccess.abstracts.BrandRepository;
 import kodlama.io.rentACar.entities.concretes.Brand;
+import lombok.AllArgsConstructor;
 
 @Service //bu sınıf bir businnes nesnesidir
+@AllArgsConstructor
 public class BrandManager implements BrendService {
 	
 	private BrandRepository brandRepository;
-	
 	private ModelMapperService modelMapperService;
+	private BrandBusinnesRules  brandBusinnesRules;
 	
 
-	public BrandManager(BrandRepository brandRepository,ModelMapperService modelMapperService) {
-		this.brandRepository = brandRepository;
-		this.modelMapperService=modelMapperService;
-	}
+
 
 
 
@@ -48,6 +48,9 @@ public class BrandManager implements BrendService {
 
 	@Override
 	public void add(CreateBrandRequest createBrandRequest) {
+		
+		
+		this.brandBusinnesRules.checkIfBrandNameExists(createBrandRequest.getName());
 		
 		Brand brand=this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);			
 		
